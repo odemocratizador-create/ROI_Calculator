@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculadora de ROI — Cibersegurança</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#222535;--border:#2e3250;--accent:#4f7cff;--accent2:#7c5cfc;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444;--text:#e2e8f0;--text-muted:#8892a4;--radius:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;font-size:14px;line-height:1.5}
+.app{max-width:1400px;margin:0 auto;padding:0 20px 60px}
+.app-header{padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.app-header h1{font-size:26px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.app-header p{color:var(--text-muted);margin-top:4px}
+.app-main{display:flex;flex-direction:column;gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px}
+.card h2{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:16px;text-transform:uppercase;letter-spacing:.05em}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text-muted);font-weight:500}
+input,select{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-size:13px;outline:none;transition:border-color .15s;width:100%}
+input:focus,select:focus{border-color:var(--accent)}
+.contract-months{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.month-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;transition:all .15s}
+.month-btn:hover{border-color:var(--accent);color:var(--text)}
+.month-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.month-custom{width:70px!important}
+.table-wrapper{overflow-x:auto}
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;color:var(--text-muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:rgba(79,124,255,.04)}
+.input-sm{width:90px!important}
+.input-xs{width:60px!important}
+.markup-cell{display:flex;align-items:center;gap:8px}
+.slider{-webkit-appearance:none;appearance:none;width:100px;height:4px;background:var(--border);border-radius:4px;border:none;padding:0;cursor:pointer}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer}
+.slider:focus{outline:none}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.pos{color:var(--good)}
+.neg{color:var(--bad)}
+.qty-cell{display:flex;flex-direction:column;gap:3px}
+.vol-hint{font-size:10px;color:var(--warn)}
+.btn-icon{background:transparent;border:1px solid transparent;border-radius:5px;cursor:pointer;padding:4px 8px;font-size:13px;transition:all .15s}
+.btn-icon.danger{color:var(--bad)}
+.btn-icon.danger:hover{background:rgba(239,68,68,.1);border-color:var(--bad)}
+.btn-add{margin-top:12px;background:transparent;border:1px dashed var(--border);color:var(--accent);border-radius:6px;padding:8px 16px;cursor:pointer;font-size:13px;transition:all .15s;width:100%}
+.btn-add:hover{background:rgba(79,124,255,.08);border-color:var(--accent)}
+.tax-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.tax-item{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text-muted)}
+.tax-inputs{display:flex;align-items:center;gap:6px}
+.unit{color:var(--text-muted);font-size:12px}
+.result-panel{background:linear-gradient(135deg,#1a1d27,#1e2035);border-color:var(--accent)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:20px}
+.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.kpi-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+.kpi-value{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi-good{border-color:var(--good)}.kpi-good .kpi-value{color:var(--good)}
+.kpi-warn{border-color:var(--warn)}.kpi-warn .kpi-value{color:var(--warn)}
+.kpi-bad{border-color:var(--bad)}.kpi-bad .kpi-value{color:var(--bad)}
+.breakdown summary{cursor:pointer;color:var(--text-muted);font-size:12px;padding:4px 0;user-select:none}
+.breakdown-table{margin-top:12px;border-collapse:collapse;font-size:13px;width:360px}
+.breakdown-table td{padding:6px 10px;border-bottom:1px solid var(--border)}
+.breakdown-table td:first-child{color:var(--text-muted)}
+.total-row td{font-weight:700;border-top:1px solid var(--border);border-bottom:none}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useCallback } = React;
+
+// ── Dados de catálogo ──────────────────────────────────────────────
+const CATALOG = [
+  { manufacturer: 'IBM', products: [
+    { name: 'MaaS360', modules: [
+      { name: 'Essentials', cost: 17.87 },
+      { name: 'TeamViewer', cost: 2.96 },
+    ]},
+  ]},
+];
+
+const SERVICE_PRESETS = [
+  { description: 'Atividades horario comercial', hourlyRate: 75 },
+  { description: 'Atividades fora do horario comercial', hourlyRate: 150 },
+];
+
+const CONTRACT_OPTIONS = [12, 24, 36, 48, 60];
+
+const VOLUME_TABLE = [
+  { max: 99, discount: 0.2 },
+  { max: 999, discount: 0.1 },
+  { max: Infinity, discount: 0.05 },
+];
+
+// ── Formatação ────────────────────────────────────────────────────
+const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const fmtPct = (v) => (v * 100).toFixed(2) + '%';
+let _id = 0;
+const uid = () => String(++_id);
+
+// ── Cálculo ───────────────────────────────────────────────────────
+function calcRow(qty, unitCost, markup, taxes) {
+  const saleUnitPrice = unitCost * markup;
+  const totalCharge = qty * saleUnitPrice;
+  const taxRate = taxes.iss + taxes.adm + taxes.comercial + taxes.suporte;
+  const taxAmount = totalCharge * taxRate;
+  const cost = qty * unitCost;
+  const netProfit = totalCharge - cost - taxAmount;
+  return { saleUnitPrice, totalCharge, netProfit, taxAmount, cost };
+}
+
+function calcROI(licenses, services, months, taxes) {
+  const licenseRows = licenses.map(l => calcRow(l.quantity, l.unitCost, l.markup, taxes));
+  const serviceRows = services.map(s => calcRow(s.hours, s.hourlyRate, s.markup, taxes));
+  const monthlyRevenue =
+    licenseRows.reduce((a, r) => a + r.totalCharge, 0) +
+    serviceRows.reduce((a, r) => a + r.totalCharge, 0);
+  const totalRevenue = monthlyRevenue * months;
+  const rawCost =
+    (licenseRows.reduce((a, r) => a + r.cost, 0) +
+     serviceRows.reduce((a, r) => a + r.cost, 0)) * months;
+  const taxAmount    = totalRevenue * taxes.iss;
+  const admAmount    = totalRevenue * taxes.adm;
+  const comercialAmount = totalRevenue * taxes.comercial;
+  const suporteAmount   = totalRevenue * taxes.suporte;
+  const totalCost = taxAmount + admAmount + comercialAmount + suporteAmount + taxes.additionalServices + rawCost;
+  const netProfit = totalRevenue - totalCost;
+  const rentability = totalRevenue > 0 ? netProfit / totalRevenue : 0;
+  return { monthlyRevenue, totalRevenue, totalCost, rawCost, taxAmount, admAmount, comercialAmount, suporteAmount, netProfit, rentability, licenseRows, serviceRows };
+}
+
+function volLabel(qty) {
+  const t = VOLUME_TABLE.find(t => qty <= t.max);
+  return t ? `Desconto referência: ${(t.discount * 100).toFixed(0)}%` : '';
+}
+
+// ── Componentes ───────────────────────────────────────────────────
+
+function ProjectHeader({ project, onChange }) {
+  const set = (f, v) => onChange({ ...project, [f]: v });
+  return (
+    <section className="card">
+      <h2>Dados do Projeto</h2>
+      <div className="grid-2">
+        <label>Cliente<input value={project.client} onChange={e => set('client', e.target.value)} placeholder="Nome do cliente" /></label>
+        <label>Gerente de Contas<input value={project.accountManager} onChange={e => set('accountManager', e.target.value)} placeholder="Nome do gerente" /></label>
+        <label>Nº do Fluxo<input value={project.flowNumber} onChange={e => set('flowNumber', e.target.value)} placeholder="Nº do fluxo" /></label>
+        <label>
+          Tempo de Contrato
+          <div className="contract-months">
+            {CONTRACT_OPTIONS.map(m => (
+              <button key={m} type="button"
+                className={`month-btn${project.contractMonths === m ? ' active' : ''}`}
+                onClick={() => set('contractMonths', m)}>{m}m</button>
+            ))}
+            <input type="number" min={1} value={project.contractMonths}
+              onChange={e => set('contractMonths', Number(e.target.value))}
+              className="month-custom" title="Prazo personalizado" />
+          </div>
+        </label>
+      </div>
+    </section>
+  );
+}
+
+function LicenseTable({ items, rows, onUpdate, onAdd, onRemove }) {
+  return (
+    <section className="card">
+      <h2>Licenças</h2>
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead><tr>
+            <th>Fabricante</th><th>Produto</th><th>Módulo</th><th>Qtd</th>
+            <th>Custo Unit. (R$)</th><th>Markup</th>
+            <th>Preço Venda Unit.</th><th>Total Mensal</th><th>Lucro Líq. (mês)</th><th></th>
+          </tr></thead>
+          <tbody>
+            {items.map((item, idx) => {
+              const row = rows[idx] || {};
+              const cat = CATALOG.find(c => c.manufacturer === item.manufacturer);
+              const prod = cat?.products.find(p => p.name === item.product);
+              return (
+                <tr key={item.id}>
+                  <td>
+                    <select value={item.manufacturer} onChange={e => onUpdate(item.id, 'manufacturer', e.target.value)}>
+                      {CATALOG.map(c => <option key={c.manufacturer}>{c.manufacturer}</option>)}
+                      <option value="__custom">Outro...</option>
+                    </select>
+                  </td>
+                  <td>
+                    {cat
+                      ? <select value={item.product} onChange={e => onUpdate(item.id, 'product', e.target.value)}>
+                          {cat.products.map(p => <option key={p.name}>{p.name}</option>)}
+                        </select>
+                      : <input value={item.product} onChange={e => onUpdate(item.id, 'product', e.target.value)} placeholder="Produto" />}
+                  </td>
+                  <td>
+                    {prod
+                      ? <select value={item.module} onChange={e => onUpdate(item.id, 'module', e.target.value)}>
+                          {prod.modules.map(m => <option key={m.name}>{m.name}</option>)}
+                        </select>
+                      : <input value={item.module} onChange={e => onUpdate(item.id, 'module', e.target.value)} placeholder="Módulo" />}
+                  </td>
+                  <td>
+                    <div className="qty-cell">
+                      <input type="number" min={0} value={item.quantity} onChange={e => onUpdate(item.id, 'quantity', Number(e.target.value))} className="input-sm" />
+                      <span className="vol-hint">{volLabel(item.quantity)}</span>
+                    </div>
+                  </td>
+                  <td><input type="number" min={0} step={0.01} value={item.unitCost} onChange={e => onUpdate(item.id, 'unitCost', Number(e.target.value))} className="input-sm" /></td>
+                  <td>
+                    <div className="markup-cell">
+                      <input type="range" min={1} max={5} step={0.05} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="slider" />
+                      <input type="number" min={1} step={0.05} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="input-xs" />
+                    </div>
+                  </td>
+                  <td className="num">{fmt(row.saleUnitPrice || 0)}</td>
+                  <td className="num">{fmt(row.totalCharge || 0)}</td>
+                  <td className={`num ${(row.netProfit||0) < 0 ? 'neg' : 'pos'}`}>{fmt(row.netProfit || 0)}</td>
+                  <td><button type="button" className="btn-icon danger" onClick={() => onRemove(item.id)}>✕</button></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <button type="button" className="btn-add" onClick={onAdd}>+ Adicionar Licença</button>
+    </section>
+  );
+}
+
+function ServiceTable({ items, rows, onUpdate, onAdd, onRemove }) {
+  return (
+    <section className="card">
+      <h2>Serviços de Suporte</h2>
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead><tr>
+            <th>Tipo</th><th>Descrição</th><th>Horas</th><th>Valor Hora (R$)</th>
+            <th>Markup</th><th>Preço Hora (venda)</th><th>Total</th><th>Lucro Líq.</th><th></th>
+          </tr></thead>
+          <tbody>
+            {items.map((item, idx) => {
+              const row = rows[idx] || {};
+              return (
+                <tr key={item.id}>
+                  <td>
+                    <select value={item.type} onChange={e => onUpdate(item.id, 'type', e.target.value)}>
+                      <option>Serviço</option><option>Consultoria</option><option>Implantação</option><option>Treinamento</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select value={item.description} onChange={e => {
+                      const preset = SERVICE_PRESETS.find(s => s.description === e.target.value);
+                      onUpdate(item.id, 'description', e.target.value);
+                      if (preset) onUpdate(item.id, 'hourlyRate', preset.hourlyRate);
+                    }}>
+                      {SERVICE_PRESETS.map(s => <option key={s.description}>{s.description}</option>)}
+                      <option value="Outro">Outro</option>
+                    </select>
+                  </td>
+                  <td><input type="number" min={0} value={item.hours} onChange={e => onUpdate(item.id, 'hours', Number(e.target.value))} className="input-sm" /></td>
+                  <td><input type="number" min={0} step={0.01} value={item.hourlyRate} onChange={e => onUpdate(item.id, 'hourlyRate', Number(e.target.value))} className="input-sm" /></td>
+                  <td>
+                    <div className="markup-cell">
+                      <input type="range" min={1} max={5} step={0.1} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="slider" />
+                      <input type="number" min={1} step={0.1} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="input-xs" />
+                    </div>
+                  </td>
+                  <td className="num">{fmt(row.saleUnitPrice || 0)}</td>
+                  <td className="num">{fmt(row.totalCharge || 0)}</td>
+                  <td className={`num ${(row.netProfit||0) < 0 ? 'neg' : 'pos'}`}>{fmt(row.netProfit || 0)}</td>
+                  <td><button type="button" className="btn-icon danger" onClick={() => onRemove(item.id)}>✕</button></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <button type="button" className="btn-add" onClick={onAdd}>+ Adicionar Serviço</button>
+    </section>
+  );
+}
+
+const TAX_FIELDS = [
+  { key: 'iss', label: 'ISS (tomando crédito PIS/Cofins)' },
+  { key: 'adm', label: 'ADM' },
+  { key: 'comercial', label: 'Comercial' },
+  { key: 'suporte', label: 'Suporte' },
+  { key: 'additionalServices', label: 'Serviços Adicionais (R$)', fixed: true },
+];
+
+function TaxPanel({ taxes, onChange }) {
+  return (
+    <section className="card">
+      <h2>Parâmetros Fiscais e Administrativos</h2>
+      <div className="tax-grid">
+        {TAX_FIELDS.map(({ key, label, fixed }) => {
+          const val = taxes[key];
+          return (
+            <label key={key} className="tax-item">
+              <span>{label}</span>
+              <div className="tax-inputs">
+                <input type="number" min={0} step={fixed ? 1 : 0.001}
+                  value={fixed ? val : +(val * 100).toFixed(3)}
+                  onChange={e => onChange({ ...taxes, [key]: fixed ? Number(e.target.value) : Number(e.target.value) / 100 })}
+                  className="input-sm" />
+                {!fixed && <span className="unit">%</span>}
+              </div>
+            </label>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ResultPanel({ result, months }) {
+  const { monthlyRevenue, totalRevenue, totalCost, rawCost, taxAmount, admAmount, comercialAmount, suporteAmount, netProfit, rentability } = result;
+  const rentClass = rentability >= 0.15 ? 'kpi-good' : rentability >= 0.05 ? 'kpi-warn' : 'kpi-bad';
+  return (
+    <section className="card result-panel">
+      <h2>Resultado — {months} meses</h2>
+      <div className="kpi-grid">
+        <div className="kpi"><span className="kpi-label">Faturamento Mensal</span><span className="kpi-value">{fmt(monthlyRevenue)}</span></div>
+        <div className="kpi"><span className="kpi-label">Faturamento Total</span><span className="kpi-value">{fmt(totalRevenue)}</span></div>
+        <div className="kpi"><span className="kpi-label">Custo Total</span><span className="kpi-value neg">{fmt(totalCost)}</span></div>
+        <div className={`kpi ${netProfit >= 0 ? 'kpi-good' : 'kpi-bad'}`}>
+          <span className="kpi-label">LL (Lucro Líquido)</span>
+          <span className="kpi-value">{fmt(netProfit)}</span>
+        </div>
+        <div className={`kpi ${rentClass}`}>
+          <span className="kpi-label">RENT (Rentabilidade)</span>
+          <span className="kpi-value">{fmtPct(rentability)}</span>
+        </div>
+      </div>
+      <details className="breakdown">
+        <summary>▸ Detalhamento de custos</summary>
+        <table className="breakdown-table">
+          <tbody>
+            <tr><td>Custo Produto/Serviço</td><td className="num">{fmt(rawCost)}</td></tr>
+            <tr><td>ISS</td><td className="num">{fmt(taxAmount)}</td></tr>
+            <tr><td>ADM</td><td className="num">{fmt(admAmount)}</td></tr>
+            <tr><td>Comercial</td><td className="num">{fmt(comercialAmount)}</td></tr>
+            <tr><td>Suporte interno</td><td className="num">{fmt(suporteAmount)}</td></tr>
+            <tr className="total-row"><td><strong>Total Custos</strong></td><td className="num neg"><strong>{fmt(totalCost)}</strong></td></tr>
+          </tbody>
+        </table>
+      </details>
+    </section>
+  );
+}
+
+// ── App principal ─────────────────────────────────────────────────
+function App() {
+  const [project, setProject] = useState({ client: '', accountManager: '', flowNumber: '', contractMonths: 12 });
+  const [taxes, setTaxes] = useState({ iss: 0.0565, adm: 0.05, comercial: 0.045, suporte: 0, additionalServices: 0 });
+
+  const newLicense = () => ({
+    id: uid(),
+    manufacturer: 'IBM', product: 'MaaS360', module: 'Essentials',
+    quantity: 190, unitCost: 17.87, markup: 1.7,
+  });
+  const newService = () => ({
+    id: uid(),
+    type: 'Serviço', description: 'Atividades horario comercial',
+    hours: 0, hourlyRate: 75, markup: 2,
+  });
+
+  const [licenses, setLicenses] = useState([newLicense()]);
+  const [services, setServices] = useState([newService()]);
+
+  const updateLicense = useCallback((id, field, value) => {
+    setLicenses(prev => prev.map(l => {
+      if (l.id !== id) return l;
+      const u = { ...l, [field]: value };
+      if (field === 'module') {
+        const cat = CATALOG.find(c => c.manufacturer === u.manufacturer);
+        const prod = cat?.products.find(p => p.name === u.product);
+        const mod = prod?.modules.find(m => m.name === value);
+        if (mod) u.unitCost = mod.cost;
+      }
+      return u;
+    }));
+  }, []);
+
+  const updateService = useCallback((id, field, value) =>
+    setServices(prev => prev.map(s => s.id !== id ? s : { ...s, [field]: value })), []);
+
+  const result = calcROI(licenses, services, project.contractMonths, taxes);
+
+  return (
+    <div className="app">
+      <header className="app-header">
+        <h1>Calculadora de ROI</h1>
+        <p>Precificação para Faturamento — Cibersegurança</p>
+      </header>
+      <main className="app-main">
+        <ProjectHeader project={project} onChange={setProject} />
+        <LicenseTable
+          items={licenses} rows={result.licenseRows}
+          onUpdate={updateLicense}
+          onAdd={() => setLicenses(p => [...p, newLicense()])}
+          onRemove={id => setLicenses(p => p.filter(l => l.id !== id))}
+        />
+        <ServiceTable
+          items={services} rows={result.serviceRows}
+          onUpdate={updateService}
+          onAdd={() => setServices(p => [...p, newService()])}
+          onRemove={id => setServices(p => p.filter(s => s.id !== id))}
+        />
+        <TaxPanel taxes={taxes} onChange={setTaxes} />
+        <ResultPanel result={result} months={project.contractMonths} />
+      </main>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
