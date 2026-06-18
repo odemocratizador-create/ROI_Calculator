@@ -8,158 +8,519 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#222535;--border:#2e3250;--accent:#4f7cff;--accent2:#7c5cfc;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444;--text:#e2e8f0;--text-muted:#8892a4;--radius:10px}
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#222535;--border:#2e3250;--accent:#4f7cff;--accent2:#7c5cfc;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444;--text:#e2e8f0;--muted:#8892a4;--radius:10px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;font-size:14px;line-height:1.5}
 .app{max-width:1400px;margin:0 auto;padding:0 20px 60px}
-.app-header{padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:24px}
-.app-header h1{font-size:26px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.app-header p{color:var(--text-muted);margin-top:4px}
-.app-main{display:flex;flex-direction:column;gap:20px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px}
-.card h2{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:16px;text-transform:uppercase;letter-spacing:.05em}
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text-muted);font-weight:500}
-input,select{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-size:13px;outline:none;transition:border-color .15s;width:100%}
+.app-header{padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.app-header h1{font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.app-header p{color:var(--muted);font-size:13px;margin-top:2px}
+.header-actions{display:flex;gap:8px}
+.app-main{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px}
+.card h2{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);font-weight:500}
+input,select{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font-size:13px;outline:none;transition:border-color .15s;width:100%}
 input:focus,select:focus{border-color:var(--accent)}
-.contract-months{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.month-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;transition:all .15s}
+.contract-months{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.month-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px;transition:all .15s;white-space:nowrap}
 .month-btn:hover{border-color:var(--accent);color:var(--text)}
 .month-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-.month-custom{width:70px!important}
+.month-custom{width:65px!important}
 .table-wrapper{overflow-x:auto}
 .data-table{width:100%;border-collapse:collapse;font-size:13px}
-.data-table th{text-align:left;color:var(--text-muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
-.data-table td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table th{text-align:left;color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:7px 8px;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:8px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
 .data-table tr:last-child td{border-bottom:none}
 .data-table tr:hover td{background:rgba(79,124,255,.04)}
 .input-sm{width:90px!important}
-.input-xs{width:60px!important}
-.markup-cell{display:flex;align-items:center;gap:8px}
-.slider{-webkit-appearance:none;appearance:none;width:100px;height:4px;background:var(--border);border-radius:4px;border:none;padding:0;cursor:pointer}
-.slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer}
+.input-xs{width:58px!important}
+.input-lg{width:140px!important}
+.markup-cell{display:flex;align-items:center;gap:6px}
+.slider{-webkit-appearance:none;appearance:none;width:90px;height:4px;background:var(--border);border-radius:4px;border:none;padding:0;cursor:pointer}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer}
 .slider:focus{outline:none}
 .num{text-align:right;font-variant-numeric:tabular-nums}
-.pos{color:var(--good)}
-.neg{color:var(--bad)}
-.qty-cell{display:flex;flex-direction:column;gap:3px}
+.pos{color:var(--good)}.neg{color:var(--bad)}
+.qty-cell{display:flex;flex-direction:column;gap:2px}
 .vol-hint{font-size:10px;color:var(--warn)}
-.btn-icon{background:transparent;border:1px solid transparent;border-radius:5px;cursor:pointer;padding:4px 8px;font-size:13px;transition:all .15s}
-.btn-icon.danger{color:var(--bad)}
-.btn-icon.danger:hover{background:rgba(239,68,68,.1);border-color:var(--bad)}
-.btn-add{margin-top:12px;background:transparent;border:1px dashed var(--border);color:var(--accent);border-radius:6px;padding:8px 16px;cursor:pointer;font-size:13px;transition:all .15s;width:100%}
+/* Buttons */
+.btn{border:none;border-radius:6px;padding:7px 14px;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#3d6be0}
+.btn-secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-success{background:#16a34a;color:#fff}.btn-success:hover{background:#15803d}
+.btn-icon{background:transparent;border:1px solid transparent;border-radius:5px;cursor:pointer;padding:3px 7px;font-size:13px;transition:all .15s}
+.btn-icon.danger{color:var(--bad)}.btn-icon.danger:hover{background:rgba(239,68,68,.1);border-color:var(--bad)}
+.btn-icon.edit{color:var(--muted)}.btn-icon.edit:hover{color:var(--accent)}
+.btn-add{margin-top:10px;background:transparent;border:1px dashed var(--border);color:var(--accent);border-radius:6px;padding:7px 14px;cursor:pointer;font-size:13px;transition:all .15s;width:100%}
 .btn-add:hover{background:rgba(79,124,255,.08);border-color:var(--accent)}
-.tax-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.tax-item{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text-muted)}
-.tax-inputs{display:flex;align-items:center;gap:6px}
-.unit{color:var(--text-muted);font-size:12px}
+/* Tax panel */
+.tax-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tax-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.tax-item{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted)}
+.tax-inputs{display:flex;align-items:center;gap:5px}
+.unit{color:var(--muted);font-size:12px}
+/* Result */
 .result-panel{background:linear-gradient(135deg,#1a1d27,#1e2035);border-color:var(--accent)}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:20px}
-.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
-.kpi-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
-.kpi-value{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:16px}
+.kpi{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:5px}
+.kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.kpi-value{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 .kpi-good{border-color:var(--good)}.kpi-good .kpi-value{color:var(--good)}
 .kpi-warn{border-color:var(--warn)}.kpi-warn .kpi-value{color:var(--warn)}
 .kpi-bad{border-color:var(--bad)}.kpi-bad .kpi-value{color:var(--bad)}
-.breakdown summary{cursor:pointer;color:var(--text-muted);font-size:12px;padding:4px 0;user-select:none}
-.breakdown-table{margin-top:12px;border-collapse:collapse;font-size:13px;width:360px}
-.breakdown-table td{padding:6px 10px;border-bottom:1px solid var(--border)}
-.breakdown-table td:first-child{color:var(--text-muted)}
+.breakdown summary{cursor:pointer;color:var(--muted);font-size:12px;padding:4px 0;user-select:none}
+.breakdown-table{margin-top:10px;border-collapse:collapse;font-size:13px;width:360px}
+.breakdown-table td{padding:5px 10px;border-bottom:1px solid var(--border)}
+.breakdown-table td:first-child{color:var(--muted)}
 .total-row td{font-weight:700;border-top:1px solid var(--border);border-bottom:none}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:100%;max-width:780px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-header{padding:18px 22px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:14px}
+.modal-header h2{font-size:16px;font-weight:700}
+.modal-close{background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:4px}
+.modal-close:hover{color:var(--text)}
+.modal-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 22px}
+.modal-tab{padding:10px 16px;cursor:pointer;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.modal-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.modal-tab:hover{color:var(--text)}
+.modal-body{padding:20px 22px;overflow-y:auto;flex:1}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+/* Settings tables */
+.settings-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+.settings-table th{text-align:left;color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--border)}
+.settings-table td{padding:8px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+.settings-table tr:last-child td{border-bottom:none}
+.settings-table input,.settings-table select{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:5px 8px;font-size:12px;outline:none}
+.settings-table input:focus,.settings-table select:focus{border-color:var(--accent)}
+.tree-item{padding:6px 0}
+.tree-children{padding-left:20px;border-left:1px solid var(--border);margin-left:10px}
+.section-label{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px}
+.add-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;background:var(--surface2);border-radius:6px;margin-top:8px}
+.add-row input,.add-row select{flex:1;min-width:100px}
+/* Export modal */
+.export-modal{max-width:640px}
+.export-content{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;max-height:400px;overflow-y:auto;color:var(--text)}
+.export-section-title{color:var(--accent);font-weight:700}
+.chip{display:inline-block;background:rgba(79,124,255,.15);color:var(--accent);border-radius:4px;padding:1px 7px;font-size:11px;font-weight:600}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useCallback } = React;
+const { useState, useCallback, useMemo, useEffect } = React;
 
-// ── Dados de catálogo ──────────────────────────────────────────────
-const CATALOG = [
-  { manufacturer: 'IBM', products: [
-    { name: 'MaaS360', modules: [
-      { name: 'Essentials', cost: 17.87 },
-      { name: 'TeamViewer', cost: 2.96 },
+// ── Utilitários ────────────────────────────────────────────────────
+const fmt  = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fmtPct = v => (v*100).toFixed(3).replace(/\.?0+$/,'')+'%';
+let _id = 100;
+const uid  = () => String(++_id);
+
+const VOLUME_TABLE = [{max:99,discount:.2},{max:999,discount:.1},{max:Infinity,discount:.05}];
+const CONTRACT_OPTIONS = [12,24,36,48,60];
+
+// ── Dados padrão ──────────────────────────────────────────────────
+const DEFAULT_DISTRIBUTORS = [
+  {id:'d1', name:'Ingram', iss:0.0565},
+  {id:'d2', name:'CLM',    iss:0.0565},
+];
+
+const DEFAULT_CATALOG = [
+  { id:'m1', name:'IBM', products:[
+    { id:'p1', name:'MaaS360', modules:[
+      {id:'mod1', name:'Essentials',   cost:17.87, defaultMarkup:1.7},
+      {id:'mod2', name:'TeamViewer',   cost:2.96,  defaultMarkup:1.4},
     ]},
   ]},
 ];
 
-const SERVICE_PRESETS = [
-  { description: 'Atividades horario comercial', hourlyRate: 75 },
-  { description: 'Atividades fora do horario comercial', hourlyRate: 150 },
+const DEFAULT_SERVICES = [
+  {id:'s1', type:'Serviço', description:'Atividades horario comercial',         hourlyRate:75,  defaultMarkup:2},
+  {id:'s2', type:'Serviço', description:'Atividades fora do horario comercial', hourlyRate:150, defaultMarkup:1},
 ];
 
-const CONTRACT_OPTIONS = [12, 24, 36, 48, 60];
-
-const VOLUME_TABLE = [
-  { max: 99, discount: 0.2 },
-  { max: 999, discount: 0.1 },
-  { max: Infinity, discount: 0.05 },
-];
-
-// ── Formatação ────────────────────────────────────────────────────
-const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-const fmtPct = (v) => (v * 100).toFixed(2) + '%';
-let _id = 0;
-const uid = () => String(++_id);
+// ── Persistência ───────────────────────────────────────────────────
+function load(key, def){ try{ const v=localStorage.getItem(key); return v?JSON.parse(v):def; }catch{ return def; } }
+function save(key,val){ try{ localStorage.setItem(key,JSON.stringify(val)); }catch{} }
 
 // ── Cálculo ───────────────────────────────────────────────────────
-function calcRow(qty, unitCost, markup, taxes) {
-  const saleUnitPrice = unitCost * markup;
-  const totalCharge = qty * saleUnitPrice;
+function calcRow(qty, unitCost, markup, taxRate){
+  const saleUnit  = unitCost * markup;
+  const total     = qty * saleUnit;
+  const taxes     = total * taxRate;
+  const cost      = qty * unitCost;
+  const profit    = total - cost - taxes;
+  return {saleUnit, total, taxes, cost, profit};
+}
+
+function calcROI(licenses, services, months, taxes){
   const taxRate = taxes.iss + taxes.adm + taxes.comercial + taxes.suporte;
-  const taxAmount = totalCharge * taxRate;
-  const cost = qty * unitCost;
-  const netProfit = totalCharge - cost - taxAmount;
-  return { saleUnitPrice, totalCharge, netProfit, taxAmount, cost };
+  const licRows = licenses.map(l => calcRow(l.quantity, l.unitCost, l.markup, taxRate));
+  const svcRows = services.map(s => calcRow(s.hours, s.hourlyRate, s.markup, taxRate));
+  const monthlyRev = [...licRows,...svcRows].reduce((a,r)=>a+r.total,0);
+  const totalRev   = monthlyRev * months;
+  const rawCost    = ([...licRows,...svcRows].reduce((a,r)=>a+r.cost,0)) * months;
+  const issAmt  = totalRev * taxes.iss;
+  const admAmt  = totalRev * taxes.adm;
+  const comAmt  = totalRev * taxes.comercial;
+  const supAmt  = totalRev * taxes.suporte;
+  const totalCost = issAmt+admAmt+comAmt+supAmt+taxes.additionalServices+rawCost;
+  const netProfit = totalRev - totalCost;
+  const rent      = totalRev>0 ? netProfit/totalRev : 0;
+  return {monthlyRev, totalRev, totalCost, rawCost, issAmt, admAmt, comAmt, supAmt, netProfit, rent, licRows, svcRows};
 }
 
-function calcROI(licenses, services, months, taxes) {
-  const licenseRows = licenses.map(l => calcRow(l.quantity, l.unitCost, l.markup, taxes));
-  const serviceRows = services.map(s => calcRow(s.hours, s.hourlyRate, s.markup, taxes));
-  const monthlyRevenue =
-    licenseRows.reduce((a, r) => a + r.totalCharge, 0) +
-    serviceRows.reduce((a, r) => a + r.totalCharge, 0);
-  const totalRevenue = monthlyRevenue * months;
-  const rawCost =
-    (licenseRows.reduce((a, r) => a + r.cost, 0) +
-     serviceRows.reduce((a, r) => a + r.cost, 0)) * months;
-  const taxAmount    = totalRevenue * taxes.iss;
-  const admAmount    = totalRevenue * taxes.adm;
-  const comercialAmount = totalRevenue * taxes.comercial;
-  const suporteAmount   = totalRevenue * taxes.suporte;
-  const totalCost = taxAmount + admAmount + comercialAmount + suporteAmount + taxes.additionalServices + rawCost;
-  const netProfit = totalRevenue - totalCost;
-  const rentability = totalRevenue > 0 ? netProfit / totalRevenue : 0;
-  return { monthlyRevenue, totalRevenue, totalCost, rawCost, taxAmount, admAmount, comercialAmount, suporteAmount, netProfit, rentability, licenseRows, serviceRows };
+function volLabel(qty){
+  const t=VOLUME_TABLE.find(t=>qty<=t.max);
+  return t?`Ref. desconto: ${(t.discount*100).toFixed(0)}%`:'';
 }
 
-function volLabel(qty) {
-  const t = VOLUME_TABLE.find(t => qty <= t.max);
-  return t ? `Desconto referência: ${(t.discount * 100).toFixed(0)}%` : '';
+// ── Modal base ────────────────────────────────────────────────────
+function Modal({title, onClose, footer, children, className=''}){
+  useEffect(()=>{
+    const h=e=>{ if(e.key==='Escape') onClose(); };
+    document.addEventListener('keydown',h);
+    return ()=>document.removeEventListener('keydown',h);
+  },[onClose]);
+  return (
+    <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+      <div className={`modal ${className}`} onClick={e=>e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>{title}</h2>
+          <button className="modal-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">{children}</div>
+        {footer && <div className="modal-footer">{footer}</div>}
+      </div>
+    </div>
+  );
 }
 
-// ── Componentes ───────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// MODAL DE CONFIGURAÇÕES
+// ══════════════════════════════════════════════════════════════════
+function SettingsModal({catalog,setCatalog,distributors,setDistributors,servicePresets,setServicePresets,onClose}){
+  const [tab,setTab]=useState('dist');
 
-function ProjectHeader({ project, onChange }) {
-  const set = (f, v) => onChange({ ...project, [f]: v });
+  return (
+    <Modal title="⚙ Configurações" onClose={onClose}
+      footer={<button className="btn btn-primary" onClick={onClose}>Fechar</button>}>
+      <div className="modal-tabs" style={{margin:'0 -22px',padding:'0 22px'}}>
+        {[['dist','Distribuidores'],['fab','Fabricantes'],['lic','Licenças'],['svc','Serviços']].map(([k,l])=>(
+          <div key={k} className={`modal-tab${tab===k?' active':''}`} onClick={()=>setTab(k)}>{l}</div>
+        ))}
+      </div>
+      <div style={{marginTop:16}}>
+        {tab==='dist'  && <DistTab distributors={distributors} setDistributors={setDistributors}/>}
+        {tab==='fab'   && <FabTab catalog={catalog} setCatalog={setCatalog}/>}
+        {tab==='lic'   && <LicTab catalog={catalog} setCatalog={setCatalog}/>}
+        {tab==='svc'   && <SvcTab servicePresets={servicePresets} setServicePresets={setServicePresets}/>}
+      </div>
+    </Modal>
+  );
+}
+
+// Tab: Distribuidores
+function DistTab({distributors,setDistributors}){
+  const [form,setForm]=useState({name:'',iss:'5.65'});
+  const add=()=>{
+    if(!form.name.trim()) return;
+    setDistributors(p=>[...p,{id:uid(),name:form.name.trim(),iss:Number(form.iss)/100}]);
+    setForm({name:'',iss:'5.65'});
+  };
+  const upd=(id,field,val)=>setDistributors(p=>p.map(d=>d.id!==id?d:{...d,[field]:field==='iss'?Number(val)/100:val}));
+  const del=(id)=>setDistributors(p=>p.filter(d=>d.id!==id));
+  return (<>
+    <div className="section-label">Distribuidores cadastrados</div>
+    <table className="settings-table">
+      <thead><tr><th>Nome</th><th>ISS — crédito PIS/Cofins (%)</th><th></th></tr></thead>
+      <tbody>
+        {distributors.map(d=>(
+          <tr key={d.id}>
+            <td><input value={d.name} onChange={e=>upd(d.id,'name',e.target.value)} style={{width:140}}/></td>
+            <td><input type="number" value={+(d.iss*100).toFixed(4)} step={0.001} min={0}
+              onChange={e=>upd(d.id,'iss',e.target.value)} style={{width:100}}/> %</td>
+            <td><button className="btn-icon danger" onClick={()=>del(d.id)}>✕</button></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <div className="add-row">
+      <input placeholder="Nome do distribuidor" value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))}/>
+      <input type="number" placeholder="ISS %" value={form.iss} step={0.001} min={0}
+        onChange={e=>setForm(p=>({...p,iss:e.target.value}))} style={{maxWidth:100}}/>
+      <span style={{fontSize:12,color:'var(--muted)'}}>%</span>
+      <button className="btn btn-primary" onClick={add}>+ Adicionar</button>
+    </div>
+  </>);
+}
+
+// Tab: Fabricantes
+function FabTab({catalog,setCatalog}){
+  const [name,setName]=useState('');
+  const add=()=>{
+    if(!name.trim()) return;
+    setCatalog(p=>[...p,{id:uid(),name:name.trim(),products:[]}]);
+    setName('');
+  };
+  const upd=(id,val)=>setCatalog(p=>p.map(m=>m.id!==id?m:{...m,name:val}));
+  const del=(id)=>setCatalog(p=>p.filter(m=>m.id!==id));
+  return (<>
+    <div className="section-label">Fabricantes</div>
+    <table className="settings-table">
+      <thead><tr><th>Nome do Fabricante</th><th>Produtos</th><th></th></tr></thead>
+      <tbody>
+        {catalog.map(m=>(
+          <tr key={m.id}>
+            <td><input value={m.name} onChange={e=>upd(m.id,e.target.value)} style={{width:160}}/></td>
+            <td style={{color:'var(--muted)',fontSize:12}}>{m.products.map(p=>p.name).join(', ')||'—'}</td>
+            <td><button className="btn-icon danger" onClick={()=>del(m.id)}>✕</button></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <div className="add-row">
+      <input placeholder="Nome do fabricante" value={name} onChange={e=>setName(e.target.value)}/>
+      <button className="btn btn-primary" onClick={add}>+ Adicionar</button>
+    </div>
+  </>);
+}
+
+// Tab: Licenças (produtos e módulos)
+function LicTab({catalog,setCatalog}){
+  const [selMfr,setSelMfr]=useState(catalog[0]?.id||'');
+  const [selProd,setSelProd]=useState('');
+  const [newProd,setNewProd]=useState('');
+  const [newMod,setNewMod]=useState({name:'',cost:'',markup:'1.5'});
+
+  const mfr = catalog.find(m=>m.id===selMfr);
+  const prod = mfr?.products.find(p=>p.id===selProd);
+
+  const addProd=()=>{
+    if(!newProd.trim()||!mfr) return;
+    setCatalog(p=>p.map(m=>m.id!==selMfr?m:{...m,products:[...m.products,{id:uid(),name:newProd.trim(),modules:[]}]}));
+    setNewProd('');
+  };
+  const delProd=(pid)=>setCatalog(p=>p.map(m=>m.id!==selMfr?m:{...m,products:m.products.filter(pr=>pr.id!==pid)}));
+  const updProd=(pid,val)=>setCatalog(p=>p.map(m=>m.id!==selMfr?m:{...m,products:m.products.map(pr=>pr.id!==pid?pr:{...pr,name:val})}));
+
+  const addMod=()=>{
+    if(!newMod.name.trim()||!prod) return;
+    const mod={id:uid(),name:newMod.name.trim(),cost:Number(newMod.cost),defaultMarkup:Number(newMod.markup)};
+    setCatalog(p=>p.map(m=>m.id!==selMfr?m:{...m,products:m.products.map(pr=>pr.id!==selProd?pr:{...pr,modules:[...pr.modules,mod]})}));
+    setNewMod({name:'',cost:'',markup:'1.5'});
+  };
+  const delMod=(mid)=>setCatalog(p=>p.map(m=>m.id!==selMfr?m:{...m,products:m.products.map(pr=>pr.id!==selProd?pr:{...pr,modules:pr.modules.filter(md=>md.id!==mid)})}));
+  const updMod=(mid,field,val)=>setCatalog(p=>p.map(m=>m.id!==selMfr?m:{...m,products:m.products.map(pr=>pr.id!==selProd?pr:{...pr,modules:pr.modules.map(md=>md.id!==mid?md:{...md,[field]:['cost','defaultMarkup'].includes(field)?Number(val):val})})}));
+
+  return (<>
+    <div style={{display:'flex',gap:10,marginBottom:12,flexWrap:'wrap'}}>
+      <label style={{flex:1,minWidth:140}}>
+        Fabricante
+        <select value={selMfr} onChange={e=>{setSelMfr(e.target.value);setSelProd('')}}>
+          {catalog.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}
+        </select>
+      </label>
+      <label style={{flex:1,minWidth:140}}>
+        Produto
+        <select value={selProd} onChange={e=>setSelProd(e.target.value)}>
+          <option value="">— selecione —</option>
+          {mfr?.products.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
+        </select>
+      </label>
+    </div>
+
+    {mfr && (<>
+      <div className="section-label">Produtos de {mfr.name}</div>
+      <table className="settings-table">
+        <thead><tr><th>Produto</th><th></th></tr></thead>
+        <tbody>
+          {mfr.products.map(pr=>(
+            <tr key={pr.id} style={{cursor:'pointer',background:pr.id===selProd?'rgba(79,124,255,.08)':''}}>
+              <td onClick={()=>setSelProd(pr.id)}>
+                <input value={pr.name} onChange={e=>updProd(pr.id,e.target.value)} onClick={e=>e.stopPropagation()} style={{width:160}}/>
+              </td>
+              <td><button className="btn-icon danger" onClick={()=>delProd(pr.id)}>✕</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="add-row">
+        <input placeholder="Nome do produto" value={newProd} onChange={e=>setNewProd(e.target.value)}/>
+        <button className="btn btn-primary" onClick={addProd}>+ Produto</button>
+      </div>
+    </>)}
+
+    {prod && (<>
+      <div className="section-label" style={{marginTop:18}}>Módulos de {prod.name}</div>
+      <table className="settings-table">
+        <thead><tr><th>Módulo</th><th>Custo Unit. (R$)</th><th>Markup padrão</th><th></th></tr></thead>
+        <tbody>
+          {prod.modules.map(md=>(
+            <tr key={md.id}>
+              <td><input value={md.name} onChange={e=>updMod(md.id,'name',e.target.value)} style={{width:130}}/></td>
+              <td><input type="number" value={md.cost} step={0.01} min={0} onChange={e=>updMod(md.id,'cost',e.target.value)} style={{width:80}}/></td>
+              <td><input type="number" value={md.defaultMarkup} step={0.05} min={1} onChange={e=>updMod(md.id,'defaultMarkup',e.target.value)} style={{width:70}}/></td>
+              <td><button className="btn-icon danger" onClick={()=>delMod(md.id)}>✕</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="add-row">
+        <input placeholder="Nome do módulo" value={newMod.name} onChange={e=>setNewMod(p=>({...p,name:e.target.value}))}/>
+        <input type="number" placeholder="Custo R$" value={newMod.cost} step={0.01} min={0} onChange={e=>setNewMod(p=>({...p,cost:e.target.value}))} style={{maxWidth:90}}/>
+        <input type="number" placeholder="Markup" value={newMod.markup} step={0.05} min={1} onChange={e=>setNewMod(p=>({...p,markup:e.target.value}))} style={{maxWidth:80}}/>
+        <button className="btn btn-primary" onClick={addMod}>+ Módulo</button>
+      </div>
+    </>)}
+  </>);
+}
+
+// Tab: Serviços
+function SvcTab({servicePresets,setServicePresets}){
+  const [form,setForm]=useState({type:'Serviço',description:'',hourlyRate:'',defaultMarkup:'2'});
+  const SERVICE_TYPES=['Serviço','Consultoria','Implantação','Treinamento'];
+  const add=()=>{
+    if(!form.description.trim()) return;
+    setServicePresets(p=>[...p,{id:uid(),type:form.type,description:form.description.trim(),hourlyRate:Number(form.hourlyRate),defaultMarkup:Number(form.defaultMarkup)}]);
+    setForm({type:'Serviço',description:'',hourlyRate:'',defaultMarkup:'2'});
+  };
+  const upd=(id,field,val)=>setServicePresets(p=>p.map(s=>s.id!==id?s:{...s,[field]:['hourlyRate','defaultMarkup'].includes(field)?Number(val):val}));
+  const del=(id)=>setServicePresets(p=>p.filter(s=>s.id!==id));
+  return (<>
+    <div className="section-label">Serviços de suporte</div>
+    <table className="settings-table">
+      <thead><tr><th>Tipo</th><th>Descrição</th><th>Valor/hora (R$)</th><th>Markup padrão</th><th></th></tr></thead>
+      <tbody>
+        {servicePresets.map(s=>(
+          <tr key={s.id}>
+            <td>
+              <select value={s.type} onChange={e=>upd(s.id,'type',e.target.value)} style={{width:110}}>
+                {SERVICE_TYPES.map(t=><option key={t}>{t}</option>)}
+              </select>
+            </td>
+            <td><input value={s.description} onChange={e=>upd(s.id,'description',e.target.value)} style={{width:200}}/></td>
+            <td><input type="number" value={s.hourlyRate} step={1} min={0} onChange={e=>upd(s.id,'hourlyRate',e.target.value)} style={{width:80}}/></td>
+            <td><input type="number" value={s.defaultMarkup} step={0.1} min={1} onChange={e=>upd(s.id,'defaultMarkup',e.target.value)} style={{width:70}}/></td>
+            <td><button className="btn-icon danger" onClick={()=>del(s.id)}>✕</button></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <div className="add-row">
+      <select value={form.type} onChange={e=>setForm(p=>({...p,type:e.target.value}))} style={{maxWidth:120}}>
+        {SERVICE_TYPES.map(t=><option key={t}>{t}</option>)}
+      </select>
+      <input placeholder="Descrição" value={form.description} onChange={e=>setForm(p=>({...p,description:e.target.value}))} style={{flex:2}}/>
+      <input type="number" placeholder="R$/hora" value={form.hourlyRate} step={1} min={0} onChange={e=>setForm(p=>({...p,hourlyRate:e.target.value}))} style={{maxWidth:90}}/>
+      <input type="number" placeholder="Markup" value={form.defaultMarkup} step={0.1} min={1} onChange={e=>setForm(p=>({...p,defaultMarkup:e.target.value}))} style={{maxWidth:80}}/>
+      <button className="btn btn-primary" onClick={add}>+ Adicionar</button>
+    </div>
+  </>);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODAL DE EXPORTAÇÃO
+// ══════════════════════════════════════════════════════════════════
+function ExportModal({licenses,services,result,project,distributor,onClose}){
+  const {monthlyRev,totalRev,licRows,svcRows}=result;
+  const totalQty = licenses.reduce((a,l)=>a+l.quantity,0);
+  const hasSvc   = services.some(s=>s.hours>0);
+
+  const lines=[];
+  lines.push('════════════════════════════════════════');
+  lines.push('  PROPOSTA COMERCIAL — ROI CIBERSEGURANÇA');
+  lines.push('════════════════════════════════════════');
+  if(project.client) lines.push(`Cliente:          ${project.client}`);
+  if(project.accountManager) lines.push(`Gerente de Contas: ${project.accountManager}`);
+  if(project.flowNumber) lines.push(`Nº do Fluxo:      ${project.flowNumber}`);
+  if(distributor) lines.push(`Distribuidor:      ${distributor.name}`);
+  lines.push(`Contrato:         ${project.contractMonths} meses`);
+  lines.push('');
+  lines.push('──────────────────────────────────────');
+  lines.push('  LICENÇAS ADQUIRIDAS');
+  lines.push('──────────────────────────────────────');
+  licenses.forEach((l,i)=>{
+    const row=licRows[i]||{};
+    if(l.quantity===0) return;
+    lines.push(`Fabricante:  ${l.manufacturer}`);
+    lines.push(`Produto:     ${l.product} — ${l.module}`);
+    lines.push(`Quantidade:  ${l.quantity} unidades`);
+    lines.push(`Valor unit./mês (venda): ${fmt(row.saleUnit||0)}`);
+    lines.push(`Total mensal: ${fmt(row.total||0)}`);
+    lines.push(`Total contrato (${project.contractMonths}m): ${fmt((row.total||0)*project.contractMonths)}`);
+    lines.push('');
+  });
+
+  lines.push('──────────────────────────────────────');
+  lines.push('  RESUMO FINANCEIRO');
+  lines.push('──────────────────────────────────────');
+  lines.push(`Valor total mensal:     ${fmt(monthlyRev)}`);
+  lines.push(`Valor total do contrato: ${fmt(totalRev)}`);
+  if(totalQty>0){
+    lines.push(`Valor por unidade/mês:  ${fmt(monthlyRev/totalQty)}`);
+  }
+
+  if(hasSvc){
+    lines.push('');
+    lines.push('──────────────────────────────────────');
+    lines.push('  SERVIÇOS DE SUPORTE CONTRATADOS');
+    lines.push('──────────────────────────────────────');
+    services.forEach(s=>{
+      if(s.hours===0) return;
+      lines.push(`Tipo:        ${s.type}`);
+      lines.push(`Descrição:   ${s.description}`);
+      lines.push(`Horas:       ${s.hours}h`);
+      lines.push('');
+    });
+  }
+  lines.push('════════════════════════════════════════');
+
+  const text=lines.join('\n');
+  const [copied,setCopied]=useState(false);
+  const copy=()=>{
+    navigator.clipboard.writeText(text).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000)});
+  };
+  const print=()=>{
+    const w=window.open('','_blank');
+    w.document.write(`<html><head><title>Proposta ROI</title><style>body{font-family:monospace;font-size:13px;padding:30px;white-space:pre}</style></head><body>${text.replace(/</g,'&lt;')}</body></html>`);
+    w.document.close();w.print();
+  };
+
+  return (
+    <Modal title="📄 Exportar Proposta" onClose={onClose} className="export-modal"
+      footer={<>
+        <button className="btn btn-secondary" onClick={print}>🖨 Imprimir</button>
+        <button className={`btn ${copied?'btn-success':'btn-primary'}`} onClick={copy}>{copied?'✓ Copiado!':'📋 Copiar'}</button>
+      </>}>
+      <div className="export-content">{text}</div>
+    </Modal>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SEÇÕES PRINCIPAIS
+// ══════════════════════════════════════════════════════════════════
+function ProjectHeader({project,onChange}){
+  const set=(f,v)=>onChange({...project,[f]:v});
   return (
     <section className="card">
       <h2>Dados do Projeto</h2>
       <div className="grid-2">
-        <label>Cliente<input value={project.client} onChange={e => set('client', e.target.value)} placeholder="Nome do cliente" /></label>
-        <label>Gerente de Contas<input value={project.accountManager} onChange={e => set('accountManager', e.target.value)} placeholder="Nome do gerente" /></label>
-        <label>Nº do Fluxo<input value={project.flowNumber} onChange={e => set('flowNumber', e.target.value)} placeholder="Nº do fluxo" /></label>
+        <label>Cliente<input value={project.client} onChange={e=>set('client',e.target.value)} placeholder="Nome do cliente"/></label>
+        <label>Gerente de Contas<input value={project.accountManager} onChange={e=>set('accountManager',e.target.value)} placeholder="Nome"/></label>
+        <label>Nº do Fluxo<input value={project.flowNumber} onChange={e=>set('flowNumber',e.target.value)} placeholder="Nº"/></label>
         <label>
           Tempo de Contrato
           <div className="contract-months">
-            {CONTRACT_OPTIONS.map(m => (
-              <button key={m} type="button"
-                className={`month-btn${project.contractMonths === m ? ' active' : ''}`}
-                onClick={() => set('contractMonths', m)}>{m}m</button>
+            {CONTRACT_OPTIONS.map(m=>(
+              <button key={m} type="button" className={`month-btn${project.contractMonths===m?' active':''}`}
+                onClick={()=>set('contractMonths',m)}>{m}m</button>
             ))}
             <input type="number" min={1} value={project.contractMonths}
-              onChange={e => set('contractMonths', Number(e.target.value))}
-              className="month-custom" title="Prazo personalizado" />
+              onChange={e=>set('contractMonths',Number(e.target.value))} className="month-custom"/>
           </div>
         </label>
       </div>
@@ -167,7 +528,8 @@ function ProjectHeader({ project, onChange }) {
   );
 }
 
-function LicenseTable({ items, rows, onUpdate, onAdd, onRemove }) {
+function LicenseTable({items,rows,catalog,onUpdate,onAdd,onRemove}){
+  const newMfrId = catalog[0]?.id||'';
   return (
     <section className="card">
       <h2>Licenças</h2>
@@ -179,61 +541,73 @@ function LicenseTable({ items, rows, onUpdate, onAdd, onRemove }) {
             <th>Preço Venda Unit.</th><th>Total Mensal</th><th>Lucro Líq. (mês)</th><th></th>
           </tr></thead>
           <tbody>
-            {items.map((item, idx) => {
-              const row = rows[idx] || {};
-              const cat = CATALOG.find(c => c.manufacturer === item.manufacturer);
-              const prod = cat?.products.find(p => p.name === item.product);
+            {items.map((item,idx)=>{
+              const row=rows[idx]||{};
+              const cat=catalog.find(c=>c.id===item.mfrId)||catalog.find(c=>c.name===item.manufacturer);
+              const prod=cat?.products.find(p=>p.id===item.prodId)||cat?.products.find(p=>p.name===item.product);
               return (
                 <tr key={item.id}>
                   <td>
-                    <select value={item.manufacturer} onChange={e => onUpdate(item.id, 'manufacturer', e.target.value)}>
-                      {CATALOG.map(c => <option key={c.manufacturer}>{c.manufacturer}</option>)}
+                    <select value={item.mfrId||''} onChange={e=>{
+                      const m=catalog.find(c=>c.id===e.target.value);
+                      const firstProd=m?.products[0];
+                      const firstMod=firstProd?.modules[0];
+                      onUpdate(item.id,{mfrId:e.target.value,manufacturer:m?.name||'',prodId:firstProd?.id||'',product:firstProd?.name||'',modId:firstMod?.id||'',module:firstMod?.name||'',unitCost:firstMod?.cost||0,markup:firstMod?.defaultMarkup||1.5});
+                    }}>
+                      {catalog.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
                       <option value="__custom">Outro...</option>
                     </select>
                   </td>
                   <td>
                     {cat
-                      ? <select value={item.product} onChange={e => onUpdate(item.id, 'product', e.target.value)}>
-                          {cat.products.map(p => <option key={p.name}>{p.name}</option>)}
+                      ? <select value={item.prodId||''} onChange={e=>{
+                          const p=cat.products.find(pr=>pr.id===e.target.value);
+                          const firstMod=p?.modules[0];
+                          onUpdate(item.id,{prodId:e.target.value,product:p?.name||'',modId:firstMod?.id||'',module:firstMod?.name||'',unitCost:firstMod?.cost||0,markup:firstMod?.defaultMarkup||1.5});
+                        }}>
+                          {cat.products.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
                         </select>
-                      : <input value={item.product} onChange={e => onUpdate(item.id, 'product', e.target.value)} placeholder="Produto" />}
+                      : <input value={item.product} onChange={e=>onUpdate(item.id,{product:e.target.value})} placeholder="Produto"/>}
                   </td>
                   <td>
                     {prod
-                      ? <select value={item.module} onChange={e => onUpdate(item.id, 'module', e.target.value)}>
-                          {prod.modules.map(m => <option key={m.name}>{m.name}</option>)}
+                      ? <select value={item.modId||''} onChange={e=>{
+                          const m=prod.modules.find(md=>md.id===e.target.value);
+                          onUpdate(item.id,{modId:e.target.value,module:m?.name||'',unitCost:m?.cost||0,markup:m?.defaultMarkup||1.5});
+                        }}>
+                          {prod.modules.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}
                         </select>
-                      : <input value={item.module} onChange={e => onUpdate(item.id, 'module', e.target.value)} placeholder="Módulo" />}
+                      : <input value={item.module} onChange={e=>onUpdate(item.id,{module:e.target.value})} placeholder="Módulo"/>}
                   </td>
                   <td>
                     <div className="qty-cell">
-                      <input type="number" min={0} value={item.quantity} onChange={e => onUpdate(item.id, 'quantity', Number(e.target.value))} className="input-sm" />
+                      <input type="number" min={0} value={item.quantity} onChange={e=>onUpdate(item.id,{quantity:Number(e.target.value)})} className="input-sm"/>
                       <span className="vol-hint">{volLabel(item.quantity)}</span>
                     </div>
                   </td>
-                  <td><input type="number" min={0} step={0.01} value={item.unitCost} onChange={e => onUpdate(item.id, 'unitCost', Number(e.target.value))} className="input-sm" /></td>
+                  <td><input type="number" min={0} step={0.01} value={item.unitCost} onChange={e=>onUpdate(item.id,{unitCost:Number(e.target.value)})} className="input-sm"/></td>
                   <td>
                     <div className="markup-cell">
-                      <input type="range" min={1} max={5} step={0.05} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="slider" />
-                      <input type="number" min={1} step={0.05} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="input-xs" />
+                      <input type="range" min={1} max={5} step={0.05} value={item.markup} onChange={e=>onUpdate(item.id,{markup:Number(e.target.value)})} className="slider"/>
+                      <input type="number" min={1} step={0.05} value={item.markup} onChange={e=>onUpdate(item.id,{markup:Number(e.target.value)})} className="input-xs"/>
                     </div>
                   </td>
-                  <td className="num">{fmt(row.saleUnitPrice || 0)}</td>
-                  <td className="num">{fmt(row.totalCharge || 0)}</td>
-                  <td className={`num ${(row.netProfit||0) < 0 ? 'neg' : 'pos'}`}>{fmt(row.netProfit || 0)}</td>
-                  <td><button type="button" className="btn-icon danger" onClick={() => onRemove(item.id)}>✕</button></td>
+                  <td className="num">{fmt(row.saleUnit||0)}</td>
+                  <td className="num">{fmt(row.total||0)}</td>
+                  <td className={`num ${(row.profit||0)<0?'neg':'pos'}`}>{fmt(row.profit||0)}</td>
+                  <td><button className="btn-icon danger" onClick={()=>onRemove(item.id)}>✕</button></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-      <button type="button" className="btn-add" onClick={onAdd}>+ Adicionar Licença</button>
+      <button className="btn-add" onClick={onAdd}>+ Adicionar Licença</button>
     </section>
   );
 }
 
-function ServiceTable({ items, rows, onUpdate, onAdd, onRemove }) {
+function ServiceTable({items,rows,servicePresets,onUpdate,onAdd,onRemove}){
   return (
     <section className="card">
       <h2>Serviços de Suporte</h2>
@@ -244,98 +618,105 @@ function ServiceTable({ items, rows, onUpdate, onAdd, onRemove }) {
             <th>Markup</th><th>Preço Hora (venda)</th><th>Total</th><th>Lucro Líq.</th><th></th>
           </tr></thead>
           <tbody>
-            {items.map((item, idx) => {
-              const row = rows[idx] || {};
+            {items.map((item,idx)=>{
+              const row=rows[idx]||{};
               return (
                 <tr key={item.id}>
                   <td>
-                    <select value={item.type} onChange={e => onUpdate(item.id, 'type', e.target.value)}>
-                      <option>Serviço</option><option>Consultoria</option><option>Implantação</option><option>Treinamento</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select value={item.description} onChange={e => {
-                      const preset = SERVICE_PRESETS.find(s => s.description === e.target.value);
-                      onUpdate(item.id, 'description', e.target.value);
-                      if (preset) onUpdate(item.id, 'hourlyRate', preset.hourlyRate);
+                    <select value={item.presetId||''} onChange={e=>{
+                      const p=servicePresets.find(s=>s.id===e.target.value);
+                      if(p) onUpdate(item.id,{presetId:p.id,type:p.type,description:p.description,hourlyRate:p.hourlyRate,markup:p.defaultMarkup});
+                      else onUpdate(item.id,{presetId:'',type:'Serviço'});
                     }}>
-                      {SERVICE_PRESETS.map(s => <option key={s.description}>{s.description}</option>)}
-                      <option value="Outro">Outro</option>
+                      <option value="">— selecione —</option>
+                      {servicePresets.map(s=><option key={s.id} value={s.id}>{s.type} — {s.description}</option>)}
+                      <option value="__custom">Personalizado</option>
                     </select>
                   </td>
-                  <td><input type="number" min={0} value={item.hours} onChange={e => onUpdate(item.id, 'hours', Number(e.target.value))} className="input-sm" /></td>
-                  <td><input type="number" min={0} step={0.01} value={item.hourlyRate} onChange={e => onUpdate(item.id, 'hourlyRate', Number(e.target.value))} className="input-sm" /></td>
+                  <td><input value={item.description} onChange={e=>onUpdate(item.id,{description:e.target.value})} className="input-lg"/></td>
+                  <td><input type="number" min={0} value={item.hours} onChange={e=>onUpdate(item.id,{hours:Number(e.target.value)})} className="input-sm"/></td>
+                  <td><input type="number" min={0} step={0.01} value={item.hourlyRate} onChange={e=>onUpdate(item.id,{hourlyRate:Number(e.target.value)})} className="input-sm"/></td>
                   <td>
                     <div className="markup-cell">
-                      <input type="range" min={1} max={5} step={0.1} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="slider" />
-                      <input type="number" min={1} step={0.1} value={item.markup} onChange={e => onUpdate(item.id, 'markup', Number(e.target.value))} className="input-xs" />
+                      <input type="range" min={1} max={5} step={0.1} value={item.markup} onChange={e=>onUpdate(item.id,{markup:Number(e.target.value)})} className="slider"/>
+                      <input type="number" min={1} step={0.1} value={item.markup} onChange={e=>onUpdate(item.id,{markup:Number(e.target.value)})} className="input-xs"/>
                     </div>
                   </td>
-                  <td className="num">{fmt(row.saleUnitPrice || 0)}</td>
-                  <td className="num">{fmt(row.totalCharge || 0)}</td>
-                  <td className={`num ${(row.netProfit||0) < 0 ? 'neg' : 'pos'}`}>{fmt(row.netProfit || 0)}</td>
-                  <td><button type="button" className="btn-icon danger" onClick={() => onRemove(item.id)}>✕</button></td>
+                  <td className="num">{fmt(row.saleUnit||0)}</td>
+                  <td className="num">{fmt(row.total||0)}</td>
+                  <td className={`num ${(row.profit||0)<0?'neg':'pos'}`}>{fmt(row.profit||0)}</td>
+                  <td><button className="btn-icon danger" onClick={()=>onRemove(item.id)}>✕</button></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-      <button type="button" className="btn-add" onClick={onAdd}>+ Adicionar Serviço</button>
+      <button className="btn-add" onClick={onAdd}>+ Adicionar Serviço</button>
     </section>
   );
 }
 
-const TAX_FIELDS = [
-  { key: 'iss', label: 'ISS (tomando crédito PIS/Cofins)' },
-  { key: 'adm', label: 'ADM' },
-  { key: 'comercial', label: 'Comercial' },
-  { key: 'suporte', label: 'Suporte' },
-  { key: 'additionalServices', label: 'Serviços Adicionais (R$)', fixed: true },
-];
-
-function TaxPanel({ taxes, onChange }) {
+function TaxPanel({taxes,setTaxes,distributors,selectedDistId,setSelectedDistId}){
+  const set=(f,v)=>setTaxes(p=>({...p,[f]:v}));
+  const selectDist=(id)=>{
+    setSelectedDistId(id);
+    const d=distributors.find(d=>d.id===id);
+    if(d) set('iss',d.iss);
+  };
   return (
     <section className="card">
       <h2>Parâmetros Fiscais e Administrativos</h2>
+      <div style={{marginBottom:14}}>
+        <label style={{maxWidth:280}}>
+          Distribuidor
+          <select value={selectedDistId} onChange={e=>selectDist(e.target.value)}>
+            <option value="">— não selecionado —</option>
+            {distributors.map(d=><option key={d.id} value={d.id}>{d.name} (ISS {fmtPct(d.iss)})</option>)}
+          </select>
+        </label>
+      </div>
       <div className="tax-grid">
-        {TAX_FIELDS.map(({ key, label, fixed }) => {
-          const val = taxes[key];
-          return (
-            <label key={key} className="tax-item">
-              <span>{label}</span>
-              <div className="tax-inputs">
-                <input type="number" min={0} step={fixed ? 1 : 0.001}
-                  value={fixed ? val : +(val * 100).toFixed(3)}
-                  onChange={e => onChange({ ...taxes, [key]: fixed ? Number(e.target.value) : Number(e.target.value) / 100 })}
-                  className="input-sm" />
-                {!fixed && <span className="unit">%</span>}
-              </div>
-            </label>
-          );
-        })}
+        {[
+          {key:'iss',    label:'ISS (crédito PIS/Cofins)'},
+          {key:'adm',    label:'ADM'},
+          {key:'comercial', label:'Comercial'},
+          {key:'suporte',   label:'Suporte interno'},
+          {key:'additionalServices', label:'Serviços adicionais (R$)', fixed:true},
+        ].map(({key,label,fixed})=>(
+          <label key={key} className="tax-item">
+            <span>{label}</span>
+            <div className="tax-inputs">
+              <input type="number" min={0} step={fixed?1:0.001}
+                value={fixed?taxes[key]:+(taxes[key]*100).toFixed(4)}
+                onChange={e=>set(key,fixed?Number(e.target.value):Number(e.target.value)/100)}
+                className="input-sm"/>
+              {!fixed && <span className="unit">%</span>}
+            </div>
+          </label>
+        ))}
       </div>
     </section>
   );
 }
 
-function ResultPanel({ result, months }) {
-  const { monthlyRevenue, totalRevenue, totalCost, rawCost, taxAmount, admAmount, comercialAmount, suporteAmount, netProfit, rentability } = result;
-  const rentClass = rentability >= 0.15 ? 'kpi-good' : rentability >= 0.05 ? 'kpi-warn' : 'kpi-bad';
+function ResultPanel({result,months}){
+  const {monthlyRev,totalRev,totalCost,rawCost,issAmt,admAmt,comAmt,supAmt,netProfit,rent}=result;
+  const rc=rent>=.15?'kpi-good':rent>=.05?'kpi-warn':'kpi-bad';
   return (
     <section className="card result-panel">
       <h2>Resultado — {months} meses</h2>
       <div className="kpi-grid">
-        <div className="kpi"><span className="kpi-label">Faturamento Mensal</span><span className="kpi-value">{fmt(monthlyRevenue)}</span></div>
-        <div className="kpi"><span className="kpi-label">Faturamento Total</span><span className="kpi-value">{fmt(totalRevenue)}</span></div>
+        <div className="kpi"><span className="kpi-label">Fat. Mensal</span><span className="kpi-value">{fmt(monthlyRev)}</span></div>
+        <div className="kpi"><span className="kpi-label">Fat. Total ({months}m)</span><span className="kpi-value">{fmt(totalRev)}</span></div>
         <div className="kpi"><span className="kpi-label">Custo Total</span><span className="kpi-value neg">{fmt(totalCost)}</span></div>
-        <div className={`kpi ${netProfit >= 0 ? 'kpi-good' : 'kpi-bad'}`}>
+        <div className={`kpi ${netProfit>=0?'kpi-good':'kpi-bad'}`}>
           <span className="kpi-label">LL (Lucro Líquido)</span>
           <span className="kpi-value">{fmt(netProfit)}</span>
         </div>
-        <div className={`kpi ${rentClass}`}>
+        <div className={`kpi ${rc}`}>
           <span className="kpi-label">RENT (Rentabilidade)</span>
-          <span className="kpi-value">{fmtPct(rentability)}</span>
+          <span className="kpi-value">{fmtPct(rent)}</span>
         </div>
       </div>
       <details className="breakdown">
@@ -343,11 +724,11 @@ function ResultPanel({ result, months }) {
         <table className="breakdown-table">
           <tbody>
             <tr><td>Custo Produto/Serviço</td><td className="num">{fmt(rawCost)}</td></tr>
-            <tr><td>ISS</td><td className="num">{fmt(taxAmount)}</td></tr>
-            <tr><td>ADM</td><td className="num">{fmt(admAmount)}</td></tr>
-            <tr><td>Comercial</td><td className="num">{fmt(comercialAmount)}</td></tr>
-            <tr><td>Suporte interno</td><td className="num">{fmt(suporteAmount)}</td></tr>
-            <tr className="total-row"><td><strong>Total Custos</strong></td><td className="num neg"><strong>{fmt(totalCost)}</strong></td></tr>
+            <tr><td>ISS</td><td className="num">{fmt(issAmt)}</td></tr>
+            <tr><td>ADM</td><td className="num">{fmt(admAmt)}</td></tr>
+            <tr><td>Comercial</td><td className="num">{fmt(comAmt)}</td></tr>
+            <tr><td>Suporte interno</td><td className="num">{fmt(supAmt)}</td></tr>
+            <tr className="total-row"><td><strong>Total</strong></td><td className="num neg"><strong>{fmt(totalCost)}</strong></td></tr>
           </tbody>
         </table>
       </details>
@@ -355,73 +736,90 @@ function ResultPanel({ result, months }) {
   );
 }
 
-// ── App principal ─────────────────────────────────────────────────
-function App() {
-  const [project, setProject] = useState({ client: '', accountManager: '', flowNumber: '', contractMonths: 12 });
-  const [taxes, setTaxes] = useState({ iss: 0.0565, adm: 0.05, comercial: 0.045, suporte: 0, additionalServices: 0 });
+// ══════════════════════════════════════════════════════════════════
+// APP
+// ══════════════════════════════════════════════════════════════════
+function App(){
+  const [catalog,       setCatalog]        = useState(()=>load('roi_catalog',DEFAULT_CATALOG));
+  const [distributors,  setDistributors]   = useState(()=>load('roi_dist',DEFAULT_DISTRIBUTORS));
+  const [servicePresets,setServicePresets] = useState(()=>load('roi_svc',DEFAULT_SERVICES));
 
-  const newLicense = () => ({
-    id: uid(),
-    manufacturer: 'IBM', product: 'MaaS360', module: 'Essentials',
-    quantity: 190, unitCost: 17.87, markup: 1.7,
-  });
-  const newService = () => ({
-    id: uid(),
-    type: 'Serviço', description: 'Atividades horario comercial',
-    hours: 0, hourlyRate: 75, markup: 2,
-  });
+  useEffect(()=>save('roi_catalog',catalog),[catalog]);
+  useEffect(()=>save('roi_dist',distributors),[distributors]);
+  useEffect(()=>save('roi_svc',servicePresets),[servicePresets]);
 
-  const [licenses, setLicenses] = useState([newLicense()]);
-  const [services, setServices] = useState([newService()]);
+  const [project,setProject]=useState({client:'',accountManager:'',flowNumber:'',contractMonths:12});
+  const [taxes,setTaxes]=useState({iss:0.0565,adm:0.05,comercial:0.045,suporte:0,additionalServices:0});
+  const [selectedDistId,setSelectedDistId]=useState(distributors[0]?.id||'');
 
-  const updateLicense = useCallback((id, field, value) => {
-    setLicenses(prev => prev.map(l => {
-      if (l.id !== id) return l;
-      const u = { ...l, [field]: value };
-      if (field === 'module') {
-        const cat = CATALOG.find(c => c.manufacturer === u.manufacturer);
-        const prod = cat?.products.find(p => p.name === u.product);
-        const mod = prod?.modules.find(m => m.name === value);
-        if (mod) u.unitCost = mod.cost;
-      }
-      return u;
-    }));
-  }, []);
+  const [showSettings,setShowSettings]=useState(false);
+  const [showExport,  setShowExport]  =useState(false);
 
-  const updateService = useCallback((id, field, value) =>
-    setServices(prev => prev.map(s => s.id !== id ? s : { ...s, [field]: value })), []);
+  const newLicense=useCallback(()=>{
+    const m=catalog[0]; const p=m?.products[0]; const mod=p?.modules[0];
+    return {id:uid(),mfrId:m?.id||'',manufacturer:m?.name||'',prodId:p?.id||'',product:p?.name||'',modId:mod?.id||'',module:mod?.name||'',quantity:190,unitCost:mod?.cost||0,markup:mod?.defaultMarkup||1.5};
+  },[catalog]);
 
-  const result = calcROI(licenses, services, project.contractMonths, taxes);
+  const newService=useCallback(()=>{
+    const s=servicePresets[0];
+    return {id:uid(),presetId:s?.id||'',type:s?.type||'Serviço',description:s?.description||'',hours:0,hourlyRate:s?.hourlyRate||75,markup:s?.defaultMarkup||2};
+  },[servicePresets]);
+
+  const [licenses,setLicenses]=useState(()=>[newLicense()]);
+  const [services,setServices]=useState(()=>[newService()]);
+
+  const updLicense=useCallback((id,patch)=>setLicenses(p=>p.map(l=>l.id!==id?l:{...l,...patch})),[]);
+  const updService=useCallback((id,patch)=>setServices(p=>p.map(s=>s.id!==id?s:{...s,...patch})),[]);
+
+  const result=useMemo(()=>calcROI(licenses,services,project.contractMonths,taxes),[licenses,services,project.contractMonths,taxes]);
+  const selectedDist=distributors.find(d=>d.id===selectedDistId)||null;
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>Calculadora de ROI</h1>
-        <p>Precificação para Faturamento — Cibersegurança</p>
-      </header>
+      <div className="app-header">
+        <div>
+          <h1>Calculadora de ROI</h1>
+          <p>Precificação para Faturamento — Cibersegurança</p>
+        </div>
+        <div className="header-actions">
+          <button className="btn btn-secondary" onClick={()=>setShowSettings(true)}>⚙ Configurações</button>
+          <button className="btn btn-primary"   onClick={()=>setShowExport(true)}>📄 Exportar</button>
+        </div>
+      </div>
+
       <main className="app-main">
-        <ProjectHeader project={project} onChange={setProject} />
-        <LicenseTable
-          items={licenses} rows={result.licenseRows}
-          onUpdate={updateLicense}
-          onAdd={() => setLicenses(p => [...p, newLicense()])}
-          onRemove={id => setLicenses(p => p.filter(l => l.id !== id))}
-        />
-        <ServiceTable
-          items={services} rows={result.serviceRows}
-          onUpdate={updateService}
-          onAdd={() => setServices(p => [...p, newService()])}
-          onRemove={id => setServices(p => p.filter(s => s.id !== id))}
-        />
-        <TaxPanel taxes={taxes} onChange={setTaxes} />
-        <ResultPanel result={result} months={project.contractMonths} />
+        <ProjectHeader project={project} onChange={setProject}/>
+        <LicenseTable items={licenses} rows={result.licRows} catalog={catalog}
+          onUpdate={updLicense}
+          onAdd={()=>setLicenses(p=>[...p,newLicense()])}
+          onRemove={id=>setLicenses(p=>p.filter(l=>l.id!==id))}/>
+        <ServiceTable items={services} rows={result.svcRows} servicePresets={servicePresets}
+          onUpdate={updService}
+          onAdd={()=>setServices(p=>[...p,newService()])}
+          onRemove={id=>setServices(p=>p.filter(s=>s.id!==id))}/>
+        <TaxPanel taxes={taxes} setTaxes={setTaxes}
+          distributors={distributors} selectedDistId={selectedDistId} setSelectedDistId={setSelectedDistId}/>
+        <ResultPanel result={result} months={project.contractMonths}/>
       </main>
+
+      {showSettings && (
+        <SettingsModal
+          catalog={catalog} setCatalog={setCatalog}
+          distributors={distributors} setDistributors={setDistributors}
+          servicePresets={servicePresets} setServicePresets={setServicePresets}
+          onClose={()=>setShowSettings(false)}/>
+      )}
+      {showExport && (
+        <ExportModal
+          licenses={licenses} services={services} result={result}
+          project={project} distributor={selectedDist}
+          onClose={()=>setShowExport(false)}/>
+      )}
     </div>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
